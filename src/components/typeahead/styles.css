@@ -6,13 +6,6 @@
   box-shadow: 5px 5px 25px -8px rgba(0, 0, 0, 0.58);
 }
 
-.typeahead__list {
-  max-height: 20rem;
-  overflow: scroll;
-  border-left: solid rgba(192, 192, 192, 1) 1px;
-  border-right: solid rgba(192, 192, 192, 1) 1px;
-}
-
 .typeahead__find {
   padding: 0.3rem 0.5rem;
   font-size: 0.7rem;
@@ -25,9 +18,17 @@
   border: solid green 1px;
 }
 
+
+.typeahead__list {
+  max-height: 20rem;
+  overflow: scroll;
+  border-left: solid rgba(192, 192, 192, 1) 1px;
+  border-right: solid rgba(192, 192, 192, 1) 1px;
+}
+
 /* Hide list when User clicks off form */
 .typeahead__form:not(:hover) .typeahead__find:not(:focus) + .typeahead__list {
-  opacity: 0;
+  /* opacity: 0; */
   height: 0;
 }
 
@@ -53,3 +54,5 @@
 .typeahead__data:last-child {
   border-bottom: solid rgba(192, 192, 192, 1) 1px;
 }
+
+

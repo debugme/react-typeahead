@@ -45,15 +45,15 @@ class Typeahead extends Component {
   onKeyDown = (event) => {
     const { searchTerm } = this.state
     const { handleEscape, handleMove, handleEnter } = this
-    const handleUpDown = handleMove(event.key)
+    const handleArrow = handleMove(event.key)
     const method = !searchTerm
       ? noop
       : (event.key === 'Escape')
       ? handleEscape
       : (event.key === 'ArrowUp')
-      ? handleUpDown
+      ? handleArrow
       : (event.key === 'ArrowDown')
-      ? handleUpDown
+      ? handleArrow
       : (event.key) === 'Enter'
       ? handleEnter
       : noop
@@ -96,9 +96,12 @@ class Typeahead extends Component {
     const nodeList = Array.from(document.querySelectorAll('.typeahead__data'))
     const byValue = (node) => (node.getAttribute('value') === oldNode.getAttribute('value'))
     const oldIndex = nodeList.findIndex(byValue)
-    const newIndex = (key === 'ArrowUp')
-      ? Math.max(0, oldIndex - 1)
-      : Math.min(source.length - 1, oldIndex + 1)
+    const prevIndex = oldIndex - 1
+    const nextIndex = oldIndex + 1
+    const lastIndex = source.length - 1
+    const newIndex = (key === 'ArrowDown')
+      ? Math.min(nextIndex > lastIndex ? 0 : nextIndex)
+      : Math.max(prevIndex < 0 ? lastIndex : prevIndex)
     const newNode = nodeList[newIndex] || fauxNode
     this.toggleStyle(oldNode, newNode)
     newNode.scrollIntoView({ scrollMode: 'if-needed', block: 'nearest' })
