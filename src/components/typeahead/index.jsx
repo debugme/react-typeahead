@@ -4,7 +4,9 @@ import Form from './form'
 import Find from './find'
 import List from './list'
 
+import always from '../../utilities/always'
 import unique from '../../utilities/unique'
+import byTerm from '../../utilities/byTerm'
 import toPair from '../../utilities/toPair'
 import fauxNode from '../../utilities/fauxNode'
 import noop from '../../utilities/noop'
@@ -19,20 +21,28 @@ class Typeahead extends Component {
       searchTerm: '',
       isSelected: false,
       domNode: fauxNode,
-      source: props.datalist.filter(unique).sort().map(toPair)
+      source: this.filterList(props.datalist)
     }
   }
+
+  filterList = (datalist, searchTerm) =>
+    datalist
+      .filter(unique)
+      .sort()
+      .map(toPair)
+      .filter(searchTerm ? byTerm(searchTerm) : always(true))
 
   onChange = (event) => {
     const userInput = event.target.value
     const searchTerm = userInput.trim().toLowerCase()
     const isSelected = false
     const domNode = fauxNode
-    const newState = { userInput, searchTerm, isSelected, domNode }
+    const source = this.filterList(this.props.datalist, searchTerm)
+    const newState = { source, userInput, searchTerm, isSelected, domNode }
     this.setState(newState)
   }
 
-  onKeyUp = (event) => {
+  onKeyDown = (event) => {
     const { searchTerm } = this.state
     const { handleEscape, handleMove, handleEnter } = this
     const handleUpDown = handleMove(event.key)
@@ -104,14 +114,14 @@ class Typeahead extends Component {
   }
 
   render = () => {
-    const { onChange, onKeyUp, onClick, onMouseOver } = this
+    const { onChange, onKeyDown, onClick, onMouseOver } = this
     const { userInput, searchTerm, isSelected } = this.state
     const { datalist } = this.props
     const source = datalist.filter(unique).sort().map(toPair)
 
     const markUp = (
       <Form>
-        <Find {...{ userInput, isSelected, onChange, onKeyUp }} />
+        <Find {...{ userInput, isSelected, onChange, onKeyDown }} />
         <List {...{ source, searchTerm, onClick, onMouseOver }} />
       </Form>
     )
