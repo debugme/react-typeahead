@@ -4,9 +4,9 @@ import Form from './form'
 import Find from './find'
 import List from './list'
 
-import toggleStyle from '../../utilities/toggleStyle'
-import filterList from '../../utilities/filterList'
+import always from '../../utilities/always'
 import unique from '../../utilities/unique'
+import byTerm from '../../utilities/byTerm'
 import toPair from '../../utilities/toPair'
 import fauxNode from '../../utilities/fauxNode'
 import byNodeValue from '../../utilities/byNodeValue'
@@ -22,7 +22,7 @@ class Typeahead extends Component {
       searchTerm: '',
       isSelected: false,
       domNode: fauxNode,
-      source: filterList(props.datalist)
+      source: this.filterList(props.datalist)
     }
   }
 
@@ -31,7 +31,7 @@ class Typeahead extends Component {
     const searchTerm = userInput.trim().toLowerCase()
     const isSelected = false
     const domNode = fauxNode
-    const source = filterList(this.props.datalist, searchTerm)
+    const source = this.filterList(this.props.datalist, searchTerm)
     const newState = { source, userInput, searchTerm, isSelected, domNode }
     this.setState(newState)
   }
@@ -64,9 +64,22 @@ class Typeahead extends Component {
   }
 
   onMouseOver = (event) => {
+    const { domNode: oldNode } = this.state
     const { target: newNode } = event
+    this.toggleStyle(oldNode, newNode)
+  }
+
+  filterList = (datalist, searchTerm) =>
+    datalist
+      .filter(unique)
+      .sort()
+      .map(toPair)
+      .filter(searchTerm ? byTerm(searchTerm) : always(true))
+
+  toggleStyle = (oldNode, newNode) => {
     const className = 'typeahead__data--hover'
-    toggleStyle(newNode, className)
+    oldNode.classList.toggle(className)
+    newNode.classList.toggle(className)
     this.setState({ domNode: newNode })
   }
 
@@ -91,10 +104,8 @@ class Typeahead extends Component {
       ? Math.min(nextIndex > lastIndex ? 0 : nextIndex)
       : Math.max(prevIndex < 0 ? lastIndex : prevIndex)
     const newNode = nodeList[newIndex] || fauxNode
-    const className = 'typeahead__data--hover'
-    toggleStyle(newNode, className)
+    this.toggleStyle(oldNode, newNode)
     newNode.scrollIntoView({ scrollMode: 'if-needed', block: 'nearest' })
-    this.setState({ domNode: newNode })
   }
 
   handleEnter = () => {

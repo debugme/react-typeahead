@@ -46,6 +46,10 @@
   color: rgba(0, 0, 0, 1)
 }
 
+.typeahead__data--hover {
+  background-color: rgba(192, 192, 192, 0.4);
+}
+
 .typeahead__data:last-child {
   border-bottom: solid rgba(192, 192, 192, 1) 1px;
 }
