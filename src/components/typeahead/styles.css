@@ -1,17 +1,10 @@
 .typeahead__form {
   display: inline-block;
   border: none;
-  min-width: 20rem;
+  width: 100%;
   letter-spacing: 1px;
   box-shadow: 5px 5px 25px -8px rgba(0, 0, 0, 0.58);
   font-size: 1.1rem;
-}
-
-@media screen and (max-device-width: 375px) {
-  .typeahead__form {
-    width: 100%;
-    font-size: 2rem;
-  }
 }
 
 .typeahead__find {
