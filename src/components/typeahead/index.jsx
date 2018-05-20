@@ -9,6 +9,7 @@ import unique from '../../utilities/unique'
 import byTerm from '../../utilities/byTerm'
 import toPair from '../../utilities/toPair'
 import fauxNode from '../../utilities/fauxNode'
+import byNodeValue from '../../utilities/byNodeValue'
 import noop from '../../utilities/noop'
 
 import './styles.css'
@@ -24,13 +25,6 @@ class Typeahead extends Component {
       source: this.filterList(props.datalist)
     }
   }
-
-  filterList = (datalist, searchTerm) =>
-    datalist
-      .filter(unique)
-      .sort()
-      .map(toPair)
-      .filter(searchTerm ? byTerm(searchTerm) : always(true))
 
   onChange = (event) => {
     const userInput = event.target.value
@@ -75,9 +69,17 @@ class Typeahead extends Component {
     this.toggleStyle(oldNode, newNode)
   }
 
+  filterList = (datalist, searchTerm) =>
+    datalist
+      .filter(unique)
+      .sort()
+      .map(toPair)
+      .filter(searchTerm ? byTerm(searchTerm) : always(true))
+
   toggleStyle = (oldNode, newNode) => {
-    oldNode.classList.toggle('typeahead__data--hover')
-    newNode.classList.toggle('typeahead__data--hover')
+    const className = 'typeahead__data--hover'
+    oldNode.classList.toggle(className)
+    newNode.classList.toggle(className)
     this.setState({ domNode: newNode })
   }
 
@@ -94,8 +96,7 @@ class Typeahead extends Component {
   handleMove = (key) => () => {
     const { domNode: oldNode, source } = this.state
     const nodeList = Array.from(document.querySelectorAll('.typeahead__data'))
-    const byValue = (node) => (node.getAttribute('value') === oldNode.getAttribute('value'))
-    const oldIndex = nodeList.findIndex(byValue)
+    const oldIndex = nodeList.findIndex(byNodeValue(oldNode))
     const prevIndex = oldIndex - 1
     const nextIndex = oldIndex + 1
     const lastIndex = source.length - 1
