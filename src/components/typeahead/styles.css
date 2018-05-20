@@ -7,8 +7,15 @@
   font-size: 1.1rem;
 }
 
+@media screen and (max-device-width: 375px) {
+  .typeahead__form {
+    width: 100%;
+    font-size: 2rem;
+  }
+}
+
 .typeahead__find {
-  padding: 0.3rem 0.5rem;
+  padding: 0.4rem 0.8rem;
   font-size: inherit;
   width: 100%;
   border: solid rgba(192, 192, 192, 1) 1px;
@@ -32,7 +39,7 @@
 }
 
 .typeahead__data {
-  padding: 0.3rem 0.5rem;
+  padding: 0.4rem 0.8rem;
   font-weight: 200;
   font-size: inherit;
   cursor: pointer;
